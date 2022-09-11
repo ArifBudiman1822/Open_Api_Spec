@@ -1,0 +1,311 @@
+openapi: 3.0.0
+info:
+  title: RestFul Api ToDoList
+  description: Open Api For ToDoList
+  contact:
+    name: Arif Budiman
+    email: muhammadarifbudiman@gmail.com
+  version: 1.0.0
+servers:
+- url: "http://{environment}.localhost:3000"
+  variables:
+    environment:
+      enum:
+      - dev
+      - qa
+      - prod
+      default: dev
+paths:
+  /localhost:
+    get:
+      tags:
+      - ToDoList
+      summary: Get All ToDoList
+      parameters:
+      - name: Include Done
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: boolean
+          nullable: true
+          default: false
+      - name: name
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          maxLength: 100
+          minLength: 1
+          type: string
+        examples:
+          Golang:
+            description: Example name Golang
+            value: Golang
+          Java:
+            description: Example name Java
+            value: Java
+      responses:
+        "200":
+          description: Success Get All ToDoList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArrayTodolist'
+              examples:
+                success:
+                  description: Example Success Get All ToDoList
+                  value:
+                  - Id: 1
+                    name: Golang
+                    priority: 5
+                    tags:
+                    - Goroutine
+                    - Context
+                  - id: 2
+                    name: Java
+                    priority: 3
+                    tags:
+                    - Goroutine
+                    - Context
+      security:
+      - ToDoListAuth: []
+    post:
+      tags:
+      - ToDoList
+      summary: Create New ToDoList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdate'
+            examples:
+              Golang:
+                description: Example Create Golang
+                value:
+                  name: Golang
+                  priority: 4
+                  tags:
+                  - Goroutine
+                  - Context
+              Java:
+                description: Example Create Java
+                value:
+                  name: Java
+                  priority: 6
+                  tags:
+                  - OOP
+                  - Mobile
+        required: true
+      responses:
+        "200":
+          description: Success Create New ToDoList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todolist'
+              examples:
+                Golang:
+                  description: Example Create Golang
+                  value:
+                    id: 1
+                    name: Golang
+                    priority: 6
+                    tags:
+                    - Goroutine
+                    - Context
+                Java:
+                  description: Example Create Java
+                  value:
+                    id: 2
+                    name: Java
+                    priority: 4
+                    tags:
+                    - OOP
+                    - Mobile
+      security:
+      - ToDoListAuth: []
+  /localhost/{todolistId}:
+    put:
+      tags:
+      - ToDoList
+      summary: Update Existing ToDoList
+      parameters:
+      - name: todolistId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          minLength: 1
+          type: string
+        examples:
+          Golang:
+            description: Example todolistId for Golang
+            value: "1"
+          Java:
+            description: Example todolistId for Java
+            value: "2"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrUpdate'
+            examples:
+              Golang:
+                description: Example Update Golang
+                value:
+                  name: Golang
+                  priority: 4
+                  tags:
+                  - Goroutine
+                  - Context
+              Java:
+                description: Example Update Java
+                value:
+                  name: Java
+                  priority: 6
+                  tags:
+                  - OOP
+                  - Mobile
+        required: true
+      responses:
+        "200":
+          description: Success Update ToDoList
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todolist'
+              examples:
+                Golang:
+                  description: Example Update Golang
+                  value:
+                    id: 1
+                    name: Golang
+                    priority: 6
+                    tags:
+                    - Goroutine
+                    - Context
+                Java:
+                  description: Example Update Java
+                  value:
+                    id: 2
+                    name: Java
+                    priority: 4
+                    tags:
+                    - OOP
+                    - Mobile
+      security:
+      - ToDoListAuth: []
+    delete:
+      tags:
+      - ToDoList
+      summary: Delete Existing ToDoList
+      parameters:
+      - name: todolistId
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          maxLength: 100
+          minLength: 1
+          type: string
+        examples:
+          Golang:
+            description: Example todolistId for Golang
+            value: "1"
+          Java:
+            description: Example todolistId for Java
+            value: "2"
+      responses:
+        "200":
+          description: Success Delete ToDoList by id
+          content:
+            application/json:
+              schema:
+                type: boolean
+                default: true
+                x-content-type: application/json
+              example: false
+      security:
+      - ToDoListAuth: []
+components:
+  schemas:
+    Todolist:
+      type: object
+      properties:
+        id:
+          minLength: 1
+          type: string
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+        priority:
+          type: integer
+          format: int32
+          default: 1
+        tags:
+          minItems: 1
+          type: array
+          items:
+            maxLength: 100
+            minLength: 1
+            type: string
+      example:
+        name: name
+        id: id
+        priority: 0
+        tags:
+        - tags
+        - tags
+    CreateOrUpdate:
+      type: object
+      properties:
+        name:
+          maxLength: 100
+          minLength: 1
+          type: string
+        priority:
+          type: integer
+          format: int32
+          default: 1
+        tags:
+          minItems: 1
+          type: array
+          items:
+            minLength: 1
+            type: string
+    ArrayTodolist:
+      type: array
+      items:
+        $ref: '#/components/schemas/Todolist'
+      x-schema-name: ArrayTodolist
+  parameters:
+    TodolistId:
+      name: todolistId
+      in: path
+      required: true
+      style: simple
+      explode: false
+      schema:
+        maxLength: 100
+        minLength: 1
+        type: string
+      examples:
+        Golang:
+          description: Example todolistId for Golang
+          value: "1"
+        Java:
+          description: Example todolistId for Java
+          value: "2"
+  securitySchemes:
+    ToDoListAuth:
+      type: apiKey
+      description: Authentication for ToDoList RestFul Api
+      name: X-API-Key
+      in: header
