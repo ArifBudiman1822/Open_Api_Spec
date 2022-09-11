@@ -1,0 +1,373 @@
+{
+    "openapi":"3.0.0",
+    "info": {
+        "title":"RestFul Api ToDoList",
+        "description": "Open Api For ToDoList",
+        "contact": {
+            "name": "Arif Budiman",
+            "email": "muhammadarifbudiman@gmail.com"
+        },
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "http://{environment}.localhost:3000",
+            "variables": {
+                "environment":{
+                    "default": "dev",
+                    "enum": [
+                        "dev",
+                        "qa",
+                        "prod"
+                    ]
+                }
+            }
+        }
+    ],
+    "paths": {
+        "/localhost":{
+            "get":{
+                "security": [
+                    {
+                        "ToDoListAuth":[]
+                    }
+                ],
+                "tags": ["ToDoList"],
+                "summary": "Get All ToDoList",
+                "parameters": [
+                    {
+                        "name": "Include Done",
+                        "in": "query",
+                        "required": false,
+                        "schema":{
+                            "type":"boolean",
+                            "nullable": true,
+                            "default":false
+                        }
+                    },
+                    {
+                        "name":"name",
+                        "in": "query",
+                        "required": false,
+                        "schema":{
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength":100
+                        },
+                        "examples": {
+                            "Golang":{
+                                "description":"Example name Golang",
+                                "value":"Golang"
+                            },
+                            "Java":{
+                                "description": "Example name Java",
+                                "value":"Java"
+                            }
+                        }
+                    }
+                ],
+                "responses": {
+                    "200":{
+                        "description": "Success Get All ToDoList",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"#/components/schemas/ArrayTodolist"
+                                },
+                                "examples": {
+                                    "success":{
+                                        "description": "Example Success Get All ToDoList",
+                                        "value":[
+                                            {
+                                            "Id":1,
+                                            "name":"Golang",
+                                            "priority":5,
+                                            "tags":["Goroutine","Context"]
+                                            },
+                                            {
+                                            "id":2,
+                                            "name":"Java",
+                                            "priority":3,
+                                            "tags":["Goroutine","Context"]
+                                            }
+                                    ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post":{
+                "security": [
+                    {
+                        "ToDoListAuth":[]
+                    }
+                ],
+                "tags": ["ToDoList"],
+                "summary": "Create New ToDoList",
+                "requestBody":{
+                    "required": true,
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "$ref":"#/components/schemas/CreateOrUpdate"
+                            },
+                            "examples": {
+                                "Golang":{
+                                    "description": "Example Create Golang",
+                                    "value":{
+                                        "name":"Golang",
+                                        "priority":4,
+                                        "tags":["Goroutine","Context"]
+                                    }
+                                },
+                                "Java":{
+                                    "description": "Example Create Java",
+                                    "value":{
+                                        "name":"Java",
+                                        "priority":6,
+                                        "tags":["OOP","Mobile"]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200":{
+                        "description": "Success Create New ToDoList",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                    "$ref":"#/components/schemas/Todolist"
+                                    },
+                                    "examples": {
+                                        "Golang":{
+                                            "description": "Example Create Golang",
+                                            "value":{
+                                                "id":1,
+                                                "name":"Golang",
+                                                "priority":6,
+                                                "tags":["Goroutine","Context"]
+                                            }
+                                        },
+                                        "Java":{
+                                            "description": "Example Create Java",
+                                            "value":{
+                                                "id":2,
+                                                "name":"Java",
+                                                "priority":4,
+                                                "tags":["OOP","Mobile"]
+                                            }
+                                        }
+                                    }
+                       }
+                    }
+                }
+            }
+        }
+    },
+    "/localhost/{todolistId}":{
+        "put":{
+            "security": [
+                {
+                "ToDoListAuth":[]
+                }
+        ],
+            "tags": ["ToDoList"],
+            "summary": "Update Existing ToDoList",
+            "requestBody":{
+                "required": true,
+                "content": {
+                    "application/json":{
+                        "schema":{
+                            "$ref":"#/components/schemas/CreateOrUpdate"
+                        },
+                        "examples": {
+                            "Golang":{
+                                "description": "Example Update Golang",
+                                "value":{
+                                    "name":"Golang",
+                                    "priority":4,
+                                    "tags":["Goroutine","Context"]
+                                }
+                            },
+                            "Java":{
+                                "description": "Example Update Java",
+                                "value":{
+                                    "name":"Java",
+                                    "priority":6,
+                                    "tags":["OOP","Mobile"]
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "parameters": [
+                {
+                    "$ref":"#/components/parameters/TodolistId"
+                }
+            ],
+            "responses": {
+                    "200":{
+                        "description": "Success Update ToDoList",
+                        "content": {
+                            "application/json":{
+                                "schema":{
+                                        "$ref":"#/components/schemas/Todolist"
+                                    },
+                                    "examples": {
+                                        "Golang":{
+                                            "description": "Example Update Golang",
+                                            "value":{
+                                                "id":1,
+                                                "name":"Golang",
+                                                "priority":6,
+                                                "tags":["Goroutine","Context"]
+                                            }
+                                        },
+                                        "Java":{
+                                            "description": "Example Update Java",
+                                            "value":{
+                                                "id":2,
+                                                "name":"Java",
+                                                "priority":4,
+                                                "tags":["OOP","Mobile"]
+                                            }
+                                        }
+                                    }
+                       }
+                    }
+                }
+            }   
+            },
+        "delete":{
+            "security": [
+                {
+                    "ToDoListAuth":[]
+                }
+            ],
+            "tags": ["ToDoList"],
+            "summary": "Delete Existing ToDoList",
+            "parameters": [
+                {
+                    "$ref":"#/components/parameters/TodolistId"
+                }
+            ],
+            "responses": {
+                "200":{
+                    "description": "Success Delete ToDoList by id",
+                    "content": {
+                        "application/json":{
+                            "schema":{
+                                "type": "boolean",
+                                "default":true
+                            },
+                            "example":{
+                                "success":true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+            
+        }
+    },
+    "components": {
+        "parameters": {
+            "TodolistId":{
+                "name": "todolistId",
+                "in": "path",
+                "required": true,
+                "schema":{
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                },
+                "examples":{
+                    "Golang":{
+                        "description":"Example todolistId for Golang",
+                        "value":"1"
+                    },
+                    "Java":{
+                        "description":"Example todolistId for Java",
+                        "value":"2"
+                    }
+                }
+            }
+        },
+        "schemas": {
+            "Todolist":{
+                "type": "object",
+                "properties": {
+                    "id":{
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "name":{
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                    },
+                    "priority":{
+                        "type": "integer",
+                        "format": "int32",
+                        "default":1
+                    },
+                    "tags":{
+                        "type": "array",
+                        "minItems": 1,
+                        "items":{
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                        }
+                    }
+                }
+            },
+            "CreateOrUpdate":{
+                "type":"object",
+                "properties": {
+                    "name":{
+                        "type": "string",
+                        "required": true,
+                        "minLength": 1,
+                        "maxLength":100
+                    },
+                    "priority":{
+                        "type":"integer",
+                        "format":"int32",
+                        "required": true,
+                        "default":1
+                    },
+                    "tags":{
+                        "type": "array",
+                        "required": false,
+                        "minItems": 1,
+                        "items":{
+                            "type": "string",
+                            "minLength": 1
+                        }
+                    }
+                }
+            },
+            "ArrayTodolist":{                
+                "type": "array",
+                "items":{
+                    "$ref":"#/components/schemas/Todolist"
+                }
+            }
+        },
+        "securitySchemes": {
+            "ToDoListAuth":{
+                "description": "Authentication for ToDoList RestFul Api",
+                "type": "apiKey",
+                "in": "header",
+                "name":"X-API-Key"
+            }
+        }
+    }
+}
